@@ -163,6 +163,15 @@ where
         Ok(())
     }
 
+    /// Init wakes MPU6050 without verifies register addr, e.g. in i2c
+    pub fn init_without_verify<D: DelayMs<u8>>(&mut self, delay: &mut D) -> Result<(), Mpu6050Error<E>> {
+        self.wake(delay)?;
+        self.set_accel_range(AccelRange::G2)?;
+        self.set_gyro_range(GyroRange::D250)?;
+        self.set_accel_hpf(ACCEL_HPF::_RESET)?;
+        Ok(())
+    }
+
     /// Verifies device to address 0x68 with WHOAMI.addr() Register
     fn verify(&mut self) -> Result<(), Mpu6050Error<E>> {
         let address = self.read_byte(WHOAMI)?;
